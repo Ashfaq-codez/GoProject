@@ -29,6 +29,56 @@
         }
         .brutal-input:focus { background-color: #fef08a; } /* highlight yellow */
 
+        /* ----------------------------------------- */
+        /* MOBILE DATE INPUT: THE NUCLEAR OPTION     */
+        /* ----------------------------------------- */
+        input[type="date"].brutal-input {
+            /* 1. Strip absolutely all mobile browser defaults */
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            
+            /* 2. iOS forces rounded corners on dates. Nuke them. */
+            border-radius: 0 !important; 
+            
+            /* 3. iOS sometimes makes inputs semi-transparent. Force solid. */
+            opacity: 1 !important;
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            
+            /* 4. Layout fixes to prevent squishing */
+             
+            min-height: 3.5rem;
+            cursor: pointer;
+        }
+
+        /* Fix the text alignment inside the input on Safari */
+        input[type="date"]::-webkit-datetime-edit {
+            padding: 0;
+            line-height: normal;
+        }
+
+        /* Force the calendar icon to be a massive Brutalist button */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background-color: #bbf7d0 !important;
+            border: 2px solid #000000 !important;
+            box-shadow: 3px 3px 0px #000000 !important;
+            border-radius: 0 !important;
+            padding: 6px !important;
+            width: 1.8rem !important;
+            height: 1.8rem !important;
+            opacity: 1 !important; 
+            cursor: pointer;
+            /* Prevent the icon from being shrunk if the screen is too small */
+            flex-shrink: 0; 
+            transition: all 0.1s;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator:active {
+            box-shadow: 0px 0px 0px #000000 !important;
+            transform: translate(3px, 3px);
+        }
+
         /* Button Variants */
         .brutal-btn {
             border: 3px solid #000000;
