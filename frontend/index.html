@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .brutal-card {
+            background-color: #ffffff;
+            border: 3px solid #000000;
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .brutal-input {
+            border: 3px solid #000000;
+            outline: none;
+        }
+        .brutal-input:focus {
+            background-color: #fef08a; /* light yellow */
+        }
+        .brutal-btn {
+            background-color: #bbf7d0; /* light green */
+            border: 3px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            font-weight: bold;
+            transition: all 0.1s;
+        }
+        .brutal-btn:active {
+            box-shadow: 0px 0px 0px #000000;
+            transform: translate(4px, 4px);
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0] text-black font-sans p-8 max-w-4xl mx-auto">
+
+    <header class="mb-10">
+        <h1 class="text-4xl font-black uppercase tracking-tight">User Directory.</h1>
+        <p class="text-lg font-medium mt-2">Connecting to Go API on port 3000</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="md:col-span-1">
+            <div class="brutal-card p-6">
+                <h2 class="text-2xl font-bold mb-4 uppercase">New User</h2>
+                <form id="userForm" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block font-bold mb-1">Name</label>
+                        <input type="text" id="name" required class="brutal-input w-full p-2" placeholder="e.g. John Doe">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">Date of Birth</label>
+                        <input type="date" id="dob" required class="brutal-input w-full p-2">
+                    </div>
+                    <button type="submit" class="brutal-btn py-3 mt-2 w-full uppercase">Add User</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="md:col-span-2">
+            <div class="brutal-card p-6 bg-[#bfdbfe]"> <h2 class="text-2xl font-bold mb-4 uppercase">System Records</h2>
+                <div id="userList" class="flex flex-col gap-3">
+                    <p class="font-medium">Loading records...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/users';
+
+        // 1. Fetch and Display Users
+        async function fetchUsers() {
+            const listContainer = document.getElementById('userList');
+            try {
+                const response = await fetch(API_URL);
+                const users = await response.json();
+                
+                listContainer.innerHTML = ''; // Clear loading text
+
+                if (users.length === 0) {
+                    listContainer.innerHTML = '<p class="font-medium italic">No users found in the database.</p>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    const userCard = document.createElement('div');
+                    userCard.className = 'bg-white brutal-input p-4 flex justify-between items-center';
+                    userCard.innerHTML = `
+                        <div>
+                            <p class="text-xl font-bold">${user.name}</p>
+                            <p class="text-sm font-medium">Born: ${user.dob} <span class="bg-[#fef08a] px-2 border border-black ml-2">Age: ${user.age}</span></p>
+                        </div>
+                        <p class="text-xs font-bold text-gray-500">ID: ${user.id}</p>
+                    `;
+                    listContainer.appendChild(userCard);
+                });
+            } catch (error) {
+                listContainer.innerHTML = `<p class="font-bold text-red-600">Error connecting to API. Is the Go server running?</p>`;
+            }
+        }
+
+        // 2. Handle Form Submission
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page from reloading
+            
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, dob })
+                });
+
+                if (response.ok) {
+                    document.getElementById('userForm').reset(); // Clear inputs
+                    fetchUsers(); // Refresh the list
+                } else {
+                    const errData = await response.json();
+                    alert("Error: " + errData.error);
+                }
+            } catch (error) {
+                alert("Failed to send data to the server.");
+            }
+        });
+
+        // Load users immediately when the page opens
+        fetchUsers();
+    </script>
+</body>
+</html>
