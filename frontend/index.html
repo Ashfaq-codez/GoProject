@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/svg" href="./desert-island.svg">
+    <link rel="icon" type="image/svg+xml" href="./desert-island.svg?v=1">
     <style>
         /* Core Neo-Brutalist Styles */
         body { background-color: #f4f4f5; }
@@ -219,8 +219,7 @@
                     const formattedDate = user.dob.split('T')[0];
 
                     // 2. Generate the avatar
-                    const avatarUrl = `https://api.dicebear.com/8.x/bottts/svg?seed=${encodeURIComponent(user.name)}&backgroundColor=bbf7d0,bfdbfe,fef08a,fca5a5`;
-
+                    const avatarUrl = `https://api.dicebear.com/8.x/notionists/svg?seed=${encodeURIComponent(user.name)}&backgroundColor=bbf7d0,bfdbfe,fef08a,fca5a5`;
                     // 3. Inject the HTML safely
                     userCard.innerHTML = `
                         <div class="flex items-center gap-4 flex-grow mb-4 md:mb-0">
